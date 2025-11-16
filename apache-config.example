@@ -1,0 +1,50 @@
+# Apache Configuration for Project Organizer
+# Place this in /etc/apache2/sites-available/project-organizer.conf (Debian/Ubuntu)
+# or /etc/httpd/conf.d/project-organizer.conf (RHEL/CentOS/Fedora)
+
+<VirtualHost *:80>
+    ServerName example.com
+    ServerAdmin admin@example.com
+
+    # Path to your project directory
+    DocumentRoot /home/davidwedel/projects/project-organizer
+
+    # WSGI Configuration
+    WSGIDaemonProcess project-organizer user=www-data group=www-data threads=5 python-home=/home/davidwedel/projects/project-organizer/.venv
+    WSGIScriptAlias / /home/davidwedel/projects/project-organizer/wsgi.py
+
+    <Directory /home/davidwedel/projects/project-organizer>
+        WSGIProcessGroup project-organizer
+        WSGIApplicationGroup %{GLOBAL}
+        Require all granted
+    </Directory>
+
+    # Static files
+    Alias /static /home/davidwedel/projects/project-organizer/static
+    <Directory /home/davidwedel/projects/project-organizer/static>
+        Require all granted
+    </Directory>
+
+    # Logging
+    ErrorLog ${APACHE_LOG_DIR}/project-organizer-error.log
+    CustomLog ${APACHE_LOG_DIR}/project-organizer-access.log combined
+</VirtualHost>
+
+# Installation Steps:
+# 1. Install mod_wsgi: sudo apt install libapache2-mod-wsgi-py3 (Debian/Ubuntu)
+#                       sudo dnf install python3-mod_wsgi (Fedora/RHEL)
+#
+# 2. Copy this file to sites-available:
+#    sudo cp apache-config.example /etc/apache2/sites-available/project-organizer.conf
+#
+# 3. Enable the site:
+#    sudo a2ensite project-organizer (Debian/Ubuntu)
+#    Or just restart Apache (RHEL/Fedora)
+#
+# 4. Set proper permissions:
+#    sudo chown -R www-data:www-data /home/davidwedel/projects/project-organizer/instance
+#    sudo chmod 775 /home/davidwedel/projects/project-organizer/instance
+#
+# 5. Reload Apache:
+#    sudo systemctl reload apache2 (Debian/Ubuntu)
+#    sudo systemctl reload httpd (RHEL/Fedora)
