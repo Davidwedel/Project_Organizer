@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Help Wanted - Project Organizer{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Help Wanted</h2>
+    <p class="subtitle">All roadblocks across all projects</p>
+
+    {% if roadblocks %}
+        <div class="global-list">
+            {% for project, project_roadblocks in roadblocks|groupby('project') %}
+            <div class="card">
+                <div class="card-header">
+                    <h3>
+                        <a href="{{ url_for('view_project', project_id=project.id) }}">
+                            {% if project.implement %}{{ project.implement }}: {% endif %}{{ project.name }}
+                        </a>
+                    </h3>
+                    <span class="tag tag-{{ project.tag }}">{{ project.tag }}</span>
+                </div>
+                <ul class="grouped-items">
+                    {% for roadblock in project_roadblocks %}
+                    <li>
+                        {{ roadblock.description }}
+                        <small class="timestamp">{{ roadblock.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-message">No roadblocks reported across any projects.</p>
+    {% endif %}
+</div>
+{% endblock %}

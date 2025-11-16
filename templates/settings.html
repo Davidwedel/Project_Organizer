@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Project Organizer{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Settings</h2>
+
+    <!-- Categories Section -->
+    <div class="card">
+        <h3>Categories</h3>
+        <p class="help-text">Manage top-level categories (e.g., Chicken Barn, Hog Barn, Equipment)</p>
+
+        <form method="POST" action="{{ url_for('add_category') }}" class="inline-form">
+            <input type="text" name="name" placeholder="Add new category..." required>
+            <button type="submit" class="btn btn-sm">Add Category</button>
+        </form>
+
+        <ul class="settings-list">
+            {% if categories %}
+                {% for category in categories %}
+                <li>
+                    <span>{{ category.name }} <small class="count">({{ category.projects|length }} projects)</small></span>
+                    <form method="POST" action="{{ url_for('delete_category', category_id=category.id) }}" style="display: inline;">
+                        <button type="submit" class="btn-delete" onclick="return confirm('Delete {{ category.name }}? This will delete all projects in this category!')">×</button>
+                    </form>
+                </li>
+                {% endfor %}
+            {% else %}
+                <li class="empty">No categories yet.</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <!-- Types Section -->
+    <div class="card">
+        <h3>Project Types</h3>
+        <p class="help-text">Manage project types (e.g., Maintenance, New, Repair, Upgrade)</p>
+
+        <form method="POST" action="{{ url_for('add_type') }}" class="inline-form">
+            <input type="text" name="name" placeholder="Add new type..." required>
+            <button type="submit" class="btn btn-sm">Add Type</button>
+        </form>
+
+        <ul class="settings-list">
+            {% if types %}
+                {% for type in types %}
+                <li>
+                    <span>{{ type.name }}</span>
+                    <form method="POST" action="{{ url_for('delete_type', type_id=type.id) }}" style="display: inline;">
+                        <button type="submit" class="btn-delete" onclick="return confirm('Delete {{ type.name }}?')">×</button>
+                    </form>
+                </li>
+                {% endfor %}
+            {% else %}
+                <li class="empty">No types yet.</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="actions">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+    </div>
+</div>
+{% endblock %}

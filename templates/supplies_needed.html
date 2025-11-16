@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Supplies Needed - Project Organizer{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Supplies Needed</h2>
+    <p class="subtitle">All supplies needed across all projects</p>
+
+    {% if supplies %}
+        <div class="global-list">
+            {% for project, project_supplies in supplies|groupby('project') %}
+            <div class="card">
+                <div class="card-header">
+                    <h3>
+                        <a href="{{ url_for('view_project', project_id=project.id) }}">
+                            {% if project.implement %}{{ project.implement }}: {% endif %}{{ project.name }}
+                        </a>
+                    </h3>
+                    <span class="tag tag-{{ project.tag }}">{{ project.tag }}</span>
+                </div>
+                <ul class="grouped-items">
+                    {% for supply in project_supplies %}
+                    <li class="{% if supply.checked %}checked{% endif %}">
+                        {{ supply.item }}
+                        {% if supply.checked %}<span class="check-mark">✓</span>{% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-message">No supplies needed across any projects.</p>
+    {% endif %}
+</div>
+{% endblock %}

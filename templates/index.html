@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Categories - Project Organizer{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Categories</h2>
+
+    <div class="categories-grid">
+        {% if categories %}
+            {% for category in categories %}
+            <a href="{{ url_for('view_category', category_id=category.id) }}" class="category-card">
+                <h3>{{ category.name }}</h3>
+                <div class="category-stats">
+                    <span>{{ category.projects|length }} projects</span>
+                </div>
+            </a>
+            {% endfor %}
+        {% else %}
+            <p class="empty-message">No categories yet. Go to <a href="{{ url_for('settings') }}">Settings</a> to add categories.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
