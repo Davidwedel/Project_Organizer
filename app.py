@@ -61,7 +61,8 @@ def new_project(category_id=None):
         # Add initial comments
         comments_text = request.form.get('comments', '')
         if comments_text.strip():
-            comment = Comment(text=comments_text.strip(), project_id=project.id)
+            username = request.remote_user or 'Anonymous'
+            comment = Comment(text=comments_text.strip(), username=username, project_id=project.id)
             db.session.add(comment)
 
         db.session.commit()
@@ -126,8 +127,9 @@ def delete_supply(supply_id):
 def add_roadblock(project_id):
     project = Project.query.get_or_404(project_id)
     description = request.form.get('description')
+    username = request.remote_user or 'Anonymous'
     if description:
-        roadblock = Roadblock(description=description, project_id=project.id)
+        roadblock = Roadblock(description=description, username=username, project_id=project.id)
         db.session.add(roadblock)
         db.session.commit()
     return redirect(url_for('view_project', project_id=project.id))
@@ -144,8 +146,9 @@ def delete_roadblock(roadblock_id):
 def add_comment(project_id):
     project = Project.query.get_or_404(project_id)
     text = request.form.get('text')
+    username = request.remote_user or 'Anonymous'
     if text:
-        comment = Comment(text=text, project_id=project.id)
+        comment = Comment(text=text, username=username, project_id=project.id)
         db.session.add(comment)
         db.session.commit()
     return redirect(url_for('view_project', project_id=project.id))
