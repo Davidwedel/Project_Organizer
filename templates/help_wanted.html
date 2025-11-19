@@ -7,9 +7,9 @@
     <h2>Help Wanted</h2>
     <p class="subtitle">All roadblocks across all projects</p>
 
-    {% if roadblocks %}
+    {% if grouped_roadblocks %}
         <div class="global-list">
-            {% for project, project_roadblocks in roadblocks|groupby('project') %}
+            {% for project, project_roadblocks in grouped_roadblocks %}
             <div class="card">
                 <div class="card-header">
                     <h3>

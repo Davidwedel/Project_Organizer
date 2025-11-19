@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from models import db, Category, Type, Project, Supply, Roadblock, Comment
 import os
+from itertools import groupby
 
 app = Flask(__name__)
 
@@ -156,12 +157,24 @@ def add_comment(project_id):
 @app.route('/help-wanted')
 def help_wanted():
     roadblocks = Roadblock.query.join(Project).order_by(Project.name, Roadblock.created_at.desc()).all()
-    return render_template('help_wanted.html', roadblocks=roadblocks)
+
+    # Group roadblocks by project
+    grouped_roadblocks = []
+    for project, project_roadblocks in groupby(roadblocks, key=lambda r: r.project):
+        grouped_roadblocks.append((project, list(project_roadblocks)))
+
+    return render_template('help_wanted.html', grouped_roadblocks=grouped_roadblocks)
 
 @app.route('/supplies-needed')
 def supplies_needed():
     supplies = Supply.query.join(Project).order_by(Project.name, Supply.created_at.desc()).all()
-    return render_template('supplies_needed.html', supplies=supplies)
+
+    # Group supplies by project
+    grouped_supplies = []
+    for project, project_supplies in groupby(supplies, key=lambda s: s.project):
+        grouped_supplies.append((project, list(project_supplies)))
+
+    return render_template('supplies_needed.html', grouped_supplies=grouped_supplies)
 
 # Settings Routes
 @app.route('/settings')

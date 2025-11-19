@@ -7,9 +7,9 @@
     <h2>Supplies Needed</h2>
     <p class="subtitle">All supplies needed across all projects</p>
 
-    {% if supplies %}
+    {% if grouped_supplies %}
         <div class="global-list">
-            {% for project, project_supplies in supplies|groupby('project') %}
+            {% for project, project_supplies in grouped_supplies %}
             <div class="card">
                 <div class="card-header">
                     <h3>
